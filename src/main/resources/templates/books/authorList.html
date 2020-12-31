@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Author List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
-<h1>Author List</h1>
-<a th:href="@{/authors-create}">Create Author</a>
-<table>
-    <tr>
-        <th>Id</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+<div th:insert="books/header :: header"></div>
+<div class="container">
+    <h1>Author List</h1>
+    <a th:href="@{/authors-create}">Create Author</a>
 
-    </tr>
-    <tr th:each="author :${authors}">
-        <td th:text="${author.id}"></td>
-        <td th:text="${author.firstName}"></td>
-        <td th:text="${author.lastName}"></td>
-    </tr>
-</table>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="author :${authors}">
+                <td th:text="${author.id}"></td>
+                <a href="authorList.html" th:href="@{/authors?id={id}(id=${author.id})}"><td th:text="${author.firstName}"></td></a>
+                <td th:text="${author.lastName}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/books}">View Book List</a>
+</div>
 </body>
 </html>
