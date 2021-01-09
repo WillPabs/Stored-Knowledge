@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.title}">Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body>
+<div th:insert="books/header :: header"></div>
+<div class="container">
+    <h1 th:text="${book.title}">Book Title</h1>
+
+    <h4>Authors</h4>
+    <ul>
+        <li th:each="author : ${authors}" th:text="${author.firstName +' '+ author.lastName}">Author Name</li>
+    </ul>
+
+    <p th:text="${book.description}">Description</p>
+
+
+</div>
+</body>
+</html>
