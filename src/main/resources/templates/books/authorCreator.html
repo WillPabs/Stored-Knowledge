@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Object Creator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
 <div th:insert="books/header :: header"></div>
 <div class="container">
     <h2>New Author</h2>
-    <form th:action="@{/authors}" th:object="${author}" method="post">
+    <form th:action="@{/authors/}" th:object="${author}" method="post">
         <div>
             <label>First Name</label>
             <input type="text" class="form-control" th:field="*{firstName}">

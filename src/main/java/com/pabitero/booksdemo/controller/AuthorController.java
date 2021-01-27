@@ -1,10 +1,10 @@
 package com.pabitero.booksdemo.controller;
 
 import com.pabitero.booksdemo.entity.Author;
-import com.pabitero.booksdemo.entity.Book;
 import com.pabitero.booksdemo.service.AuthorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +20,19 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getAuthorsBooks(@PathVariable(required = false) Long id,
+    public String getAuthors(Model model) {
+        log.info("Inside getAuthors in AuthorController");
+        model.addAttribute("authors", authorService.getAuthors());
+        return "books/authorList";
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getAuthorsBooks(@PathVariable Long id,
                                   Model model) {
         log.info("Inside getAuthorsBooks in AuthorController");
 
-        if(id == null) {
-            model.addAttribute("authors", authorService.getAuthors());
-            return "books/authorList";
-
-        } else if(authorService.getAuthorById(id) != null) {
+        if (authorService.getAuthorById(id) != null) {
+            log.info("Generate singular author");
             Author existingAuthor = authorService.getAuthorById(id);
             model.addAttribute("author", existingAuthor);
             model.addAttribute("books", existingAuthor.getBooks());
@@ -47,18 +51,27 @@ public class AuthorController {
         return "books/authorCreator";
     }
 
-    @PostMapping("/")
-    public String saveNewAuthor(@RequestBody Author author) {
+    @PostMapping(value = "/",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody
+    String post(Author author) {
         log.info("Inside saveNewAuthor in AuthorController");
-        authorService.saveAuthor(author);
+        try {
+            authorService.saveAuthor(author);
 
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "books/error";
+        }
         return "books/result";
     }
 
     @PutMapping("/")
     public String updateAuthor(@RequestBody Author author) {
         log.info("Inside updateAuthor in AuthorController");
-        if(author.getId() != null) {
+        if (author.getId() != null) {
             authorService.updateAuthor(author);
             return "redirect:/authors";
         } else {
