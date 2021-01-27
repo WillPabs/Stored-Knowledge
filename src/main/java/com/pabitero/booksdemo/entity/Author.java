@@ -47,7 +47,7 @@ public class Author {
     }
 
     public Set<Book> getBooks() {
-        return books;
+            return books;
     }
 
     public void setBooks(Set<Book> books) {
@@ -73,6 +73,6 @@ public class Author {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.id);
     }
 }
