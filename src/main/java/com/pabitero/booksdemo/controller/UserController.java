@@ -41,6 +41,7 @@ public class UserController {
     public ModelAndView goToLoginPage() {
         log.info("Inside goToLoginPage in UserController");
         ModelAndView mav = new ModelAndView("books/login");
+        mav.addObject("user", new User());
         return mav;
     }
 
@@ -53,28 +54,28 @@ public class UserController {
 
         User userInDb = userService.findUserByEmail(email);
 
-        /*TODO fix index.html and method below to add user object to session so that name will show
-        *   when logged in
-        */
+        String error;
+
         ModelAndView mav = new ModelAndView();
         if (userInDb != null) {
             if (userInDb.getPassword().equals(password)) {
-                Optional<HttpSession> session = Optional.of(request.getSession());
-                if (session.isPresent()) {
-                    mav.setViewName("books/index");
-                    return mav;
-                } else {
-                    session.get().setAttribute("user", userInDb);
-                    mav.setViewName("books/index");
-                    mav.addObject("user", userInDb);
-                    return mav;
-                }
+                HttpSession session = request.getSession();
+                session.setAttribute("user", userInDb);
+                mav.setViewName("books/index");
+                mav.addObject("user", userInDb);
+                error = "1";
+                mav.addObject("error", error);
+                return mav;
             } else {
                 mav.setViewName("books/errorPage");
+                error = "2";
+                mav.addObject("error", error);
                 return mav;
             }
         } else {
             mav.setViewName("books/index");
+            error = "3";
+            mav.addObject("error", error);
             return mav;
         }
     }
