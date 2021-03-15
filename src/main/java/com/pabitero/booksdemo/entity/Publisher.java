@@ -1,11 +1,19 @@
 package com.pabitero.booksdemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Publisher {
 
     @Id
@@ -18,12 +26,10 @@ public class Publisher {
     private String state;
     private String zip;
 
+    @JsonBackReference
     @OneToMany
     @JoinColumn(name = "publisher_id")
     private Set<Book> books = new HashSet<>();
-
-    public Publisher() {
-    }
 
     public Publisher(String name, String addressLine1, String city, String state, String zip) {
         this.name = name;
