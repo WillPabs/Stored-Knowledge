@@ -8,11 +8,9 @@
 <body>
     <div th:insert="books/header :: header"></div>
     <div class="container">
-        <div th:text="${user}? (${user.firstName})">
-            <h1>Welcome Guest</h1>
-        </div>
+        <h1 th:text="${user}? ${user.username} : 'Welcome, Guest'">Welcome, User</h1>
 
-        <h1 th:text="*{user != null}? *{user.username} : '(Welcome, User)'">Welcome, User</h1>
+        <h3 th:text="${error}">Error</h3>
 
         <form th:action="@{/login}">
             <input type="submit" value="Login">

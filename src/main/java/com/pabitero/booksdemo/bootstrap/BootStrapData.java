@@ -3,9 +3,12 @@ package com.pabitero.booksdemo.bootstrap;
 import com.pabitero.booksdemo.entity.Author;
 import com.pabitero.booksdemo.entity.Book;
 import com.pabitero.booksdemo.entity.Publisher;
+import com.pabitero.booksdemo.entity.User;
 import com.pabitero.booksdemo.service.AuthorService;
 import com.pabitero.booksdemo.service.BookService;
 import com.pabitero.booksdemo.service.PublisherService;
+import com.pabitero.booksdemo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class BootStrapData implements CommandLineRunner {
 
+    @Autowired
     private AuthorService authorService;
+
+    @Autowired
     private BookService bookService;
+
+    @Autowired
     private PublisherService publisherService;
 
-    public BootStrapData(AuthorService authorService, BookService bookService, PublisherService publisherService) {
-        this.authorService = authorService;
-        this.bookService = bookService;
-        this.publisherService = publisherService;
-    }
+    @Autowired
+    private UserService userService;
+
+//    public BootStrapData(AuthorService authorService, BookService bookService, PublisherService publisherService) {
+//        this.authorService = authorService;
+//        this.bookService = bookService;
+//        this.publisherService = publisherService;
+//    }
 
     @Transactional
     @Override
@@ -84,12 +95,15 @@ public class BootStrapData implements CommandLineRunner {
         publisherService.savePublisher(pub1);
         publisherService.savePublisher(pub2);
 
+        User user = new User(1, "willpabs", "will", "pabs", "pabs@will", "6714 41", "pass");
+        userService.saveUser(user);
+
         System.out.println("Started in bootstrap");
-        System.out.println("Number of books " + bookService.getBooks().size());
-        System.out.println("Publisher Count " + publisherService.getPublishers().size());
-        System.out.println("Publisher 1 Number of Books " + pub1.getBooks().size());
-        bookService.getBooks().forEach(book -> System.out.println(book.getAuthors()));
-        authorService.getAuthors().forEach(author -> System.out.println(author.getBooks()));
+//        System.out.println("Number of books " + bookService.getBooks().size());
+//        System.out.println("Publisher Count " + publisherService.getPublishers().size());
+//        System.out.println("Publisher 1 Number of Books " + pub1.getBooks().size());
+//        bookService.getBooks().forEach(book -> System.out.println(book.getAuthors()));
+//        authorService.getAuthors().forEach(author -> System.out.println(author.getBooks()));
 
     }
 }

@@ -1,11 +1,20 @@
 package com.pabitero.booksdemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Author {
 
     @Id
@@ -13,13 +22,12 @@ public class Author {
     private Long id;
 
     private String firstName;
+
     private String lastName;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
-
-    public Author() {
-    }
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
@@ -27,7 +35,11 @@ public class Author {
     }
 
     public Long getId() {
-        return id;
+            return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -38,10 +37,21 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ModelAndView goToLoginPage() {
+    public ModelAndView goToLoginPage(HttpServletRequest request) {
         log.info("Inside goToLoginPage in UserController");
-        ModelAndView mav = new ModelAndView("books/login");
-        return mav;
+        ModelAndView mav = new ModelAndView();
+
+        String message;
+        if(request.getSession().getAttribute("user") != null) {
+            mav.setViewName("books/index");
+            message = "User already in session";
+            mav.addObject("message", message);
+            return mav;
+        } else {
+            mav.setViewName("books/login");
+            mav.addObject("user", new User());
+            return mav;
+        }
     }
 
     @PostMapping("/login")
@@ -49,32 +59,35 @@ public class UserController {
     public ModelAndView verifyLogin(User user, HttpServletRequest request) {
         log.info("Inside verifyLogin in UserController");
         String email = user.getEmail();
-        String password = user.getPassword();
-
         User userInDb = userService.findUserByEmail(email);
 
-        /*TODO fix index.html and method below to add user object to session so that name will show
-        *   when logged in
-        */
+        String message;
+
         ModelAndView mav = new ModelAndView();
         if (userInDb != null) {
+            String password = user.getPassword();
+
             if (userInDb.getPassword().equals(password)) {
-                Optional<HttpSession> session = Optional.of(request.getSession());
-                if (session.isPresent()) {
-                    mav.setViewName("books/index");
-                    return mav;
-                } else {
-                    session.get().setAttribute("user", userInDb);
-                    mav.setViewName("books/index");
-                    mav.addObject("user", userInDb);
-                    return mav;
-                }
+                log.info("Passwords match");
+                HttpSession session = request.getSession();
+                session.setAttribute("user", userInDb);
+                mav.setViewName("books/index");
+                mav.addObject("user", userInDb);
+                message = String.format("Welcome %s!", userInDb.getFirstName());
+                mav.addObject("message", message);
+                return mav;
             } else {
-                mav.setViewName("books/errorPage");
+                log.info("Incorrect Password");
+                mav.setViewName("books/login");
+                message = "Incorrect Login Information";
+                mav.addObject("message", message);
                 return mav;
             }
         } else {
-            mav.setViewName("books/index");
+            log.info("Username not found");
+            mav.setViewName("books/login");
+            message = "Username was not found";
+            mav.addObject("message", message);
             return mav;
         }
     }

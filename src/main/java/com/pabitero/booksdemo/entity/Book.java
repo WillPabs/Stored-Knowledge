@@ -1,11 +1,19 @@
 package com.pabitero.booksdemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Book {
 
     @Id
@@ -16,6 +24,7 @@ public class Book {
     private String isbn;
     private String description;
 
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "author_book",
@@ -26,10 +35,6 @@ public class Book {
     @ManyToOne
     private Publisher publisher;
 
-
-    public Book() {
-    }
-
     public Book(String title, String isbn, String description) {
         this.title = title;
         this.isbn = isbn;
@@ -39,6 +44,7 @@ public class Book {
     public Long getId() {
         return id;
     }
+
 
     public String getDescription() {
         return description;
